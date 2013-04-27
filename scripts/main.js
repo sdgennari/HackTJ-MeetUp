@@ -258,7 +258,8 @@ function createMarkers(places, tooltip) {
                     "<span id=\"popup-address\">"+place.vicinity+"</span><br>"+
                     "<div>Set as Destination? <input type=\"button\" value=\"yes\""+
                         "onClick=\"setDestFromPopup()\"></div>"+
-                    "<div><a href=\"https://twitter.com/share?text=#meetUp%20at%20"+place.name+"!%20Address:"+place.vicinity+"%20#hackTJ\" class=\"twitter-share-button\" target=\"_blank\" data-lang=\"en\">Tweet</a></div>"
+                    "<div><input type=\"button\" value=\"NiceTweet\" onClick=\"tweet("+ place.name +", " + place.vicinity + ")\"></div>"+
+                    "<div><a href=\"https://twitter.com/share?text="+encodeURIComponent("#meetUp at "+place.name+"! Address: "+place.vicinity+" #hackTJ")+"\" class=\"twitter-share-button\" target=\"_blank\" data-lang=\"en\">Tweet</a></div>"
                     "</div>";
             
             google.maps.event.addListener(marker, 'click', (function(marker, content) {
@@ -337,4 +338,10 @@ function setRadius() {
 
 function setVenue() {
 
+}
+
+function tweet(name, vicinity) {
+	left = (screen.width/2)-290;
+	top = (screen.height/2)-150;
+	window.open("https://twitter.com/share?text="+encodeURIComponent("#meetUp at "+name+"! Address: "+vicinity+" #hackTJ"), '', 'height=300' + ', width=580' + ', top=' + top +', left=' + left + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0');
 }
