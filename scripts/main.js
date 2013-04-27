@@ -3,6 +3,8 @@ var geocoder;
 var latLons;
 var addresses;
 var addressCount;
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
 
 function initialize() {
     var mapCanvas = $( "#map_canvas" );
@@ -12,9 +14,17 @@ function initialize() {
     //Make the geocoder
     geocoder = new google.maps.Geocoder();
 
+    //Make the directionsRenders
+    directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+    
     //Make the map
     initMap();
 
+    //Sample Addresses
+    getLatLonFromAddresses();
+
+    //Sample Directions
+    calcDirections("", "");
 }
 
 
@@ -49,6 +59,25 @@ function addMarker(latLon, address) {
           icon: image,
           title: addressTitle,
           position: latLon
+    });
+}
+
+//TODO: Possible feature-- Direction TYPE
+function calcDirections(from, to) {
+
+    //Sample Data
+    from = "2000 Hayes Street, San Francisco, CA";
+    to = "958 Filbert Street, San Francisco, CA";
+    
+    var request = {
+        origin:from,
+        destination:to,
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
+    };
+    directionsService.route(request, function(response, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+        directionsDisplay.setDirections(response);
+        }
     });
 }
 
@@ -121,8 +150,7 @@ function initMap() {
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-
-    getLatLonFromAddresses();
+    directionsDisplay.setMap(map);
 }
 
 function locationSearchCallback(results, status, pagination) {
