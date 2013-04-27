@@ -6,7 +6,6 @@ var addressCount;
 
 function initialize() {
     var mapCanvas = $( "#map_canvas" );
-    mapCanvas.height( mapCanvas.height()-50 );
     
     //Make the geocoder
     geocoder = new google.maps.Geocoder();
