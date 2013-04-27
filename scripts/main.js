@@ -1,11 +1,13 @@
 var map;
 var geocoder;
 var latLons;
-var destination;
+var destination;        //Stored as a string with the address OR a latLon
+var startAddress;
 var addresses;
 var addressCount;
 var directionsDisplay;
 var directionsService = new google.maps.DirectionsService();
+var infowindow = new google.maps.InfoWindow();
 
 function initialize() {
     var mapCanvas = $( "#map_canvas" );
@@ -25,7 +27,7 @@ function initialize() {
     getLatLonFromAddresses();
 
     //Sample Directions
-    calcDirections("", "");
+    calcDirections();
 }
 
 
@@ -62,18 +64,23 @@ function addMarker(latLon, address, tooltip) {
           position: latLon
     });
 
+    google.maps.event.addListener(marker, 'click', function(){
+        startAddress = marker.getPosition();
+        calcDirections();
+    });
+
 }
 
 //TODO: Possible feature-- Direction TYPE
-function calcDirections(from, to) {
-
-    //Sample Data
-    from = "2000 Hayes Street, San Francisco, CA";
-    to = "958 Filbert Street, San Francisco, CA";
+function calcDirections() {
+    if(startAddress == null || startAddress == "")
+        return;
+    if(destination == null || destination == "")
+        return;
     
     var request = {
-        origin:from,
-        destination:to,
+        origin: startAddress,
+        destination: destination,
         travelMode: google.maps.DirectionsTravelMode.DRIVING
     };
     directionsService.route(request, function(response, status) {
@@ -175,7 +182,7 @@ function createMarkers(places, tooltip) {
       
         var image = {
           url: place.icon,
-          size: new google.maps.Size(71, 71),
+          size: new google.maps.Size(25, 25),
           origin: new google.maps.Point(0, 0),
           anchor: new google.maps.Point(17, 34),
           scaledSize: new google.maps.Size(25, 25)
@@ -190,27 +197,31 @@ function createMarkers(places, tooltip) {
 
         
         if(tooltip) {
-            var contentString = "<div>"+
-                    "<span>Name</span><br>"+
-                    "<span>Picture</span><br>"+
-                    "<span>Rating</span><br>"+
-                    "<span>Phone</span><br>"+
-                    "<span>Address</span><br>"+
-                    "<span>Phone</span><br>"+
+            var content = "<div>"+
+                    "<span>"+place.name+"</span><br>"+
+                    "<span>Rating: "+place.rating+"</span><br>"+
+                    "<span id=\"popup-address\">"+place.vicinity+"</span><br>"+
+                    "<div>Set as Destination? <input type=\"button\" value=\"yes\""+
+                        "onClick=\"setDestFromPopup()\"></div>"
                     "</div>";
+            
+            google.maps.event.addListener(marker, 'click', (function(marker, content) {
+                return function() {
+                    infowindow.setContent(content);
+                    infowindow.open(map, marker);
+                }
+            })(marker, content));
 
-              var infowindow = new google.maps.InfoWindow({
-                  content: contentString
-              });
-
-              google.maps.event.addListener(marker, 'click', function() {
-                infowindow.open(map,marker);
-              });
         }
         
         //bounds.extend(place.geometry.location);
       }
       //map.fitBounds(bounds);
+}
+
+function setDestFromPopup() {
+    destination = $( "#popup-address" ).text();
+    calcDirections();
 }
 
 function addAddress() {
