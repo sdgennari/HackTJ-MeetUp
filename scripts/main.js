@@ -215,7 +215,29 @@ function createMarkers(places, tooltip) {
 
 function addAddress() {
     var address = $( "#address" ).val();
-    var li = $( "<li class=\""+address+"\">"+address+"</li>" );
+    var li = $( "<li class=\""+address+"\">"+address+"<input class=\"delete\" type=\"button\" onClick=\"removeAddress()\"></li>" );
     $( "#addresses" ).append(li);
 	$( "#address" ).val("");
+
+}
+
+function removeAddress() {
+    //Temporary safe measure against removing all addresses
+    if(addresses.length <= 1) {
+        return;
+    }
+    
+    var address_id = $( this ).parent().find( ".address-id" ).text();
+
+    //Remove the li from the ul
+    $( this ).parent().remove();
+
+    var i;
+    for(i=0; i< addresses.length; i++) {
+        if(addresses[i].id === address_id) {
+            break;
+        }
+    }
+    //Remove the address from the array
+    addresses.splice(i,1);
 }
