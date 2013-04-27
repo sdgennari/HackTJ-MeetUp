@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDegSazDw-VcXQtWyVDmsDiV-xgwaT9ijE&sensor=false">
+    </script>
+
+    <script type="text/javascript">
+    var map;
+    
+    function initialize() {
+        var latLon = new google.maps.LatLng(38.8900, -77.0300);
+        var mapOptions = {
+          center: latLon,
+          zoom: 15,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        map = new google.maps.Map(document.getElementById("map_canvas"),
+            mapOptions);
+
+        var circle = new google.maps.Circle({
+            map: map,
+            center: latLon,
+            fillColor: "#00FF00",
+            fillOpacity: 0.4,
+            strokeColor: "#00FF00",
+            strokeOpacity: 1.0,
+            strokeWeight: 5,
+            radius: (1000)
+        });
+
+        var request = {
+            location: latLon,
+            radius: 1000,
+            keyword: "bagel",
+            types: ['food']
+        };
+          
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch(request, callback);
+        }
+
+    function callback(results, status) {
+          if (status != google.maps.places.PlacesServiceStatus.OK) {
+            return;
+          } else {
+            createMarkers(results);
+          }
+        }
+
+    function createMarkers(places) {
+          var bounds = new google.maps.LatLngBounds();
+
+          for (var i = 0, place; place = places[i]; i++) {
+            var image = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+
+            var marker = new google.maps.Marker({
+              map: map,
+              icon: image,
+              title: place.name,
+              position: place.geometry.location
+            });
+            
+            bounds.extend(place.geometry.location);
+          }
+          map.fitBounds(bounds);
+        }
+    </script>
+  </head>
+  <body onload="initialize()">
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+  </body>
+</html>
