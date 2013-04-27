@@ -64,7 +64,11 @@ function initUI() {
         $("#right-bar").show("slide", {direction:"right"}, 500);
     });
 
-    initTypeAutoComplete()
+    $("#meet-up").click(function() {
+        getLatLonFromAddresses();
+    });
+
+    initTypeAutoComplete();
 
 }
 
