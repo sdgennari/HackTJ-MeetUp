@@ -29,6 +29,11 @@
 				<input id="plus-address" type="button" onClick="addAddress()">
 				<img id="meet-up" src="images/meetUp.png" alt="meetUp" style="padding: 10px 0px 0px 65px;">
 			</div>
+			<input id="get-directions" type="button" value="FIND A MEETUP" onClick="getLatLonFromAddresses()">
+			<ol id="directions">
+				<lh>Directions</lh>
+				<hr />
+			</ol>
 		</div>
 		<div id="left-show"></div>
 		
@@ -44,11 +49,13 @@
 		    </ol>
 		    <div class="options-bar">
 		    	<ul>
-		    		<li>Radius: 
+		    		<li>
+		    		    <label for="radius">Radius:</label>
 						<input id="radius" type="text" size="5" value="Radius">
 						<input class="set-option" type="button" onClick="setRadius()">
 					</li>
-		    		<li>Venue: 
+		    		<li>
+		    		    <label for="venue">Venue:</label>
 						<!--<input id="venue" type="text" size="5" value="Venue">-->
 						<input id="venue" />
 						<input class="set-option" type="button" onClick="setVenue()">

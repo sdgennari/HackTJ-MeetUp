@@ -164,11 +164,26 @@ function calcDirections() {
         destination: destination,
         travelMode: google.maps.DirectionsTravelMode.DRIVING
     };
+    
     directionsService.route(request, function(response, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-        directionsDisplay.setDirections(response);
+        if (status == google.maps.DirectionsStatus.OK) {
+            //Clear out previous directions
+            var currentDirs = $( "#directions" ).children();
+            for(var i=2; i<currentDirs.length; i++) {
+                currentDirs[i].remove();
+            }
+            
+            directionsDisplay.setDirections(response);
+            //response.routes[0].legs[0].steps[0].instructions
+            var steps = response.routes[0].legs[0].steps;
+            var li = "";
+            for(var i=0; i<steps.length; i++) {
+                li = $("<li>"+steps[i].instructions+"</li>");
+                $( "#directions" ).append(li);
+            }
         }
     });
+    $("#left-bar").show("slide", 500);
 }
 
 function getLatLonFromAddresses() {
@@ -421,7 +436,8 @@ function initTypeAutoComplete() {
             source: placeList,
             messages: {
                 noResults: '',
-                results: function() {}
+                results: function() {
+                }
             }
         });
 }
