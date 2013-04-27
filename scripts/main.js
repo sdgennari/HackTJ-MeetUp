@@ -257,7 +257,8 @@ function createMarkers(places, tooltip) {
                     "<span>Rating: "+place.rating+"</span><br>"+
                     "<span id=\"popup-address\">"+place.vicinity+"</span><br>"+
                     "<div>Set as Destination? <input type=\"button\" value=\"yes\""+
-                        "onClick=\"setDestFromPopup()\"></div>"
+                        "onClick=\"setDestFromPopup()\"></div>"+
+                    "<div><a href=\"https://twitter.com/share?text=#meetUp%20at%20"+place.name+"!%20Address:"+place.vicinity+"%20#hackTJ\" class=\"twitter-share-button\" target=\"_blank\" data-lang=\"en\">Tweet</a></div>"
                     "</div>";
             
             google.maps.event.addListener(marker, 'click', (function(marker, content) {
@@ -328,3 +329,12 @@ function removeAddress() {
     //Remove the address from the array
     addresses.splice(i,1);
 }*/
+
+
+function setRadius() {
+
+}
+
+function setGeoFeat() {
+
+}

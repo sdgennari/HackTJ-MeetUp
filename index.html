@@ -14,16 +14,18 @@
   <body onload="initialize()">
     <div id="nav-bar">
         <div id="nav-bar-content">
+        <img src="images/logo.png" alt="logo" height="55">
         </div>
     </div>
     <div id="content">
 		<div id="left-bar">
 		    <div id="left-hide"></div>
 			<ol id="addresses">
-				<lh>Addresses</lh>
+				<lh>Address List</lh>
+				<hr />
 			</ol>
 			<div class="button-bar">
-				<input id="address" type="text" size="28" value="Address">
+				<input id="address" type="text" size="28" value="Add a New Address">
 				<input id="plus-address" type="button" onClick="addAddress()">
 				<input id="get-directions" type="button" value="FIND A MEETUP" onClick="getLatLonFromAddresses()">
 			</div>
@@ -36,6 +38,22 @@
 		
 		<div id="right-bar">
 		    <div id="right-hide"></div>
+		    <ol id="options">
+		    	<lh>Options</lh>
+		    	<hr />
+		    </ol>
+		    <div class="options-bar">
+		    	<ul>
+		    		<li>Radius: 
+						<input id="radius" type="text" size="5" value="Radius">
+						<input class="set-option" type="button" onClick="setRadius()">
+					</li>
+		    		<li>Geographic Feature: 
+						<input id="geo-feat" type="text" size="5" value="Geo Feat.">
+						<input class="set-option" type="button" onClick="setGeoFeat()">
+					</li>
+				</ul>
+		    </div>
 		</div>
 		<div id="right-show"></div>
 	</div>
