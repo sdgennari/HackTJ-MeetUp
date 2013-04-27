@@ -295,7 +295,7 @@ function createMarkers(places, tooltip) {
                     "<span>"+place.name+"</span><br>"+
                     "<span>Rating: "+place.rating+"</span><br>"+
                     "<span id=\"popup-address\">"+place.vicinity+"</span><br>"+
-                    "<div>Set as Destination? <input type=\"button\" value=\"yes\""+
+                    "<div>Set as Destination? <input type=\"button\" value=\"YES\""+
                         "onClick=\"setDestFromPopup()\"></div>"+
                     "<div><a href=\"https://twitter.com/share?text="+encodeURIComponent("#meetUp at "+place.name+"! Address: "+place.vicinity+" #hackTJ")+"\" class=\"twitter-share-button\" target=\"_blank\" data-lang=\"en\"><img src=\"images/tweetbutton.png\" height=\"35px\" alt=\"Tweet\"></a></div>"
                     "</div>";

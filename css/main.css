@@ -158,11 +158,15 @@ input[type=button] {
     border-radius:2px;
     background-color: #F06060;
     float:right;
+    color:#10A296;
+    font-weight:bold;
 }
 
 .tooltip-popup {
     width: 300px;
-    height:150px;
+    height:170px;
+    color: #F06060;
+    font-family: Copperplate;
 }
 
 .delete {
