@@ -191,3 +191,10 @@ function createMarkers(places) {
       }
       //map.fitBounds(bounds);
 }
+
+function addAddress() {
+    var address = $( "#address" ).val();
+    var li = $( "<li class=\""+address+"\">"+address+"</li>" );
+    $( "#addresses" ).append(li);
+	$( "#address" ).val("");
+}
