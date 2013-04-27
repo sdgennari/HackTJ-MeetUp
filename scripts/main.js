@@ -23,7 +23,7 @@ var bounds = new google.maps.LatLngBounds();
 
 function initialize() {
     var mapCanvas = $( "#map_canvas" );
-	//mapCanvas.width(mapCanvas.width()-250);
+	mapCanvas.width(mapCanvas.width()-40);
 	//mapCanvas.height(mapCanvas.height()-60);
     
     //Make the geocoder
@@ -185,6 +185,8 @@ function calcCenter() {
     //Set map center and draw circles
     //map.setCenter(midpoint);
     map.fitBounds(bounds);
+    $("#left-bar").hide("slide", 500);
+    $("#right-bar").hide("slide", {direction:"right"}, 500);
 
     var circle = new google.maps.Circle({
         map: map,
