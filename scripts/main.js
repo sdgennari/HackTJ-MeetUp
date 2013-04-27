@@ -16,7 +16,7 @@ function initialize() {
 }
 
 
-function addMarker(latLon) {
+function addMarker(latLon, address) {
     var image = new google.maps.MarkerImage(
         'http://i.imgur.com/3YJ8z.png',
         new google.maps.Size(19,25),    // size of the image
@@ -24,12 +24,12 @@ function addMarker(latLon) {
         new google.maps.Point(9, 25)    // anchor, i.e. the point half-way along the bottom of the image
     );
 
-    
+    var addressTitle = address.substring(0, address.indexOf(",")) + "\n" + address.substring(address.indexOf(",")+2);
 
     var marker = new google.maps.Marker({
           map: map,
           icon: image,
-          title: "Test",
+          title: addressTitle,
           position: latLon
     });
 }
@@ -54,7 +54,7 @@ function getLatLonFromAddresses() {
             if (status == google.maps.GeocoderStatus.OK) {
                 //Get the latLon from the results
                 latLons.push( results[0].geometry.location );
-                addMarker( results[0].geometry.location );
+                addMarker( results[0].geometry.location, results[0].formatted_address );
                 addressCount--;
                 if(addressCount==0) {
                     calcCenter();
@@ -74,21 +74,22 @@ function calcCenter() {
     }
     var midpoint = new google.maps.LatLng( (totalLat/latLons.length), (totalLon/latLons.length));
 
-    //Set map center
+    //Set map center and draw circles
     map.setCenter(midpoint);
 
     var circle = new google.maps.Circle({
         map: map,
         center: midpoint,
         fillColor: "#00FF00",
-        fillOpacity: 0.4,
+        fillOpacity: 0.3,
         strokeColor: "#00FF00",
 
-        strokeOpacity: 1.0,
-        strokeWeight: 3,
+        strokeOpacity: 0.0,
+        strokeWeight: 1,
         radius: (1000)
     });
 }
+
 
 function initMap() {
     //var latLon = new google.maps.LatLng(37.7750, -122.4183);
@@ -102,17 +103,6 @@ function initMap() {
 
     getLatLonFromAddresses();
     /*
-    var circle = new google.maps.Circle({
-        map: map,
-        center: latLon,
-        fillColor: "#00FF00",
-        fillOpacity: 0.4,
-        strokeColor: "#00FF00",
-        strokeOpacity: 1.0,
-        strokeWeight: 5,
-        radius: (1000)
-    });
-
     var request = {
         location: latLon,
         radius: 800,
