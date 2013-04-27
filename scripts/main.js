@@ -1,6 +1,7 @@
 var map;
 var geocoder;
 var latLons;
+var destination;
 var addresses;
 var addressCount;
 var directionsDisplay;
@@ -44,7 +45,7 @@ function locationSearch(latLon, type, radius, keyword) {
     service.nearbySearch(request, locationSearchCallback);
 }
 
-function addMarker(latLon, address) {
+function addMarker(latLon, address, tooltip) {
     var image = new google.maps.MarkerImage(
         'http://i.imgur.com/3YJ8z.png',
         new google.maps.Size(19,25),    // size of the image
@@ -60,6 +61,7 @@ function addMarker(latLon, address) {
           title: addressTitle,
           position: latLon
     });
+
 }
 
 //TODO: Possible feature-- Direction TYPE
@@ -102,7 +104,7 @@ function getLatLonFromAddresses() {
             if (status == google.maps.GeocoderStatus.OK) {
                 //Get the latLon from the results
                 latLons.push( results[0].geometry.location );
-                addMarker( results[0].geometry.location, results[0].formatted_address );
+                addMarker( results[0].geometry.location, results[0].formatted_address, true );
                 addressCount--;
                 if(addressCount==0) {
                     calcCenter();
@@ -142,7 +144,6 @@ function calcCenter() {
 }
 
 function initMap() {
-    //var latLon = new google.maps.LatLng(37.7750, -122.4183);
     var latLon = new google.maps.LatLng(0.0, 0.0);
     var mapOptions = {
       center: latLon,
@@ -157,7 +158,7 @@ function locationSearchCallback(results, status, pagination) {
       if (status != google.maps.places.PlacesServiceStatus.OK) {
         return;
       } else {
-        createMarkers(results);
+        createMarkers(results, true);
 
         if(pagination.hasNextPage) {
             sleep:2;
@@ -166,7 +167,7 @@ function locationSearchCallback(results, status, pagination) {
       }
 }
 
-function createMarkers(places) {
+function createMarkers(places, tooltip) {
       //var bounds = new google.maps.LatLngBounds();
 
       for (var i = 0, place; place = places[i]; i++) {
@@ -186,6 +187,26 @@ function createMarkers(places) {
           title: place.name,
           position: place.geometry.location
         });
+
+        
+        if(tooltip) {
+            var contentString = "<div>"+
+                    "<span>Name</span><br>"+
+                    "<span>Picture</span><br>"+
+                    "<span>Rating</span><br>"+
+                    "<span>Phone</span><br>"+
+                    "<span>Address</span><br>"+
+                    "<span>Phone</span><br>"+
+                    "</div>";
+
+              var infowindow = new google.maps.InfoWindow({
+                  content: contentString
+              });
+
+              google.maps.event.addListener(marker, 'click', function() {
+                infowindow.open(map,marker);
+              });
+        }
         
         //bounds.extend(place.geometry.location);
       }
