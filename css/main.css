@@ -141,6 +141,21 @@ hr {
     border-top:#DDDDDD solid 1px;
 }
 
+input[type=text] {
+    height:28px;
+}
+
+input[type=button] {
+    border-radius:2px;
+    background-color: #F06060;
+    float:right;
+}
+
+.tooltip-popup {
+    width: 300px;
+    height:150px;
+}
+
 .delete {
     background-position: center;
     background-repeat: no-repeat;
@@ -153,7 +168,6 @@ hr {
 }
 
 #address {
-    height:28px;
     float:left;
 }
 
@@ -163,16 +177,15 @@ hr {
     border: none;
     float:right;
     border-radius:2px;
+    background-color: #F06060;
     background-image:url(../images/plus.png);
     background-position: center;
     background-repeat: no-repeat;
-    background-color: #F06060;
 }
 
 .set-option {
     width:30px;
     height:30px;
-    margin-top:5px;
     border: none;
     background-image:url(../images/checkmark.png);
     background-position: center;

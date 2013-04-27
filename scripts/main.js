@@ -291,7 +291,7 @@ function createMarkers(places, tooltip) {
         searchMarkerArray.push(marker);
 
         if(tooltip) {
-            var content = "<div>"+
+            var content = "<div class=\"tooltip-popup\">"+
                     "<span>"+place.name+"</span><br>"+
                     "<span>Rating: "+place.rating+"</span><br>"+
                     "<span id=\"popup-address\">"+place.vicinity+"</span><br>"+
