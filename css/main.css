@@ -56,7 +56,10 @@ input {
 }
 
 hr {
-	color:#F06060;
+	background-color:#F06060;
+	height:1px;
+	border:0px #F06060 solid;
+	overflow:hidden;
 }
 
 #left-bar {
@@ -138,7 +141,7 @@ hr {
     height:40px;
     padding-top:5px;
     margin-bottom:5px;
-    border-top:#DDDDDD solid 1px;
+    border-top:#F06060 solid 1px;
 }
 
 input[type=text] {
@@ -164,7 +167,6 @@ input[type=button] {
     border: none;
     width:30px;
     height:30px;
-    margin-top:5px;
 }
 
 #address {
