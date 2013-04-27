@@ -258,8 +258,7 @@ function createMarkers(places, tooltip) {
                     "<span id=\"popup-address\">"+place.vicinity+"</span><br>"+
                     "<div>Set as Destination? <input type=\"button\" value=\"yes\""+
                         "onClick=\"setDestFromPopup()\"></div>"+
-                    "<div><input type=\"button\" value=\"NiceTweet\" onClick=\"tweet("+ place.name +", " + place.vicinity + ")\"></div>"+
-                    "<div><a href=\"https://twitter.com/share?text="+encodeURIComponent("#meetUp at "+place.name+"! Address: "+place.vicinity+" #hackTJ")+"\" class=\"twitter-share-button\" target=\"_blank\" data-lang=\"en\">Tweet</a></div>"
+                    "<div><a href=\"https://twitter.com/share?text="+encodeURIComponent("#meetUp at "+place.name+"! Address: "+place.vicinity+" #hackTJ")+"\" class=\"twitter-share-button\" target=\"_blank\" data-lang=\"en\"><img src=\"images/tweetbutton.png\" height=\"35px\" alt=\"Tweet\"></a></div>"
                     "</div>";
             
             google.maps.event.addListener(marker, 'click', (function(marker, content) {
