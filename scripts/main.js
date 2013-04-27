@@ -335,6 +335,6 @@ function setRadius() {
 
 }
 
-function setGeoFeat() {
+function setVenue() {
 
 }
