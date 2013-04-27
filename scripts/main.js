@@ -16,6 +16,25 @@ function initialize() {
 
 }
 
+
+function addMarker(latLon) {
+    var image = new google.maps.MarkerImage(
+        'http://i.imgur.com/3YJ8z.png',
+        new google.maps.Size(19,25),    // size of the image
+        new google.maps.Point(0,0), // origin, in this case top-left corner
+        new google.maps.Point(9, 25)    // anchor, i.e. the point half-way along the bottom of the image
+    );
+
+    
+
+    var marker = new google.maps.Marker({
+          map: map,
+          icon: image,
+          title: "Test",
+          position: latLon
+    });
+}
+
 function getLatLonFromAddresses() {
     //Get addresses from UI
     
@@ -36,6 +55,7 @@ function getLatLonFromAddresses() {
             if (status == google.maps.GeocoderStatus.OK) {
                 //Get the latLon from the results
                 latLons.push( results[0].geometry.location );
+                addMarker( results[0].geometry.location );
                 addressCount--;
                 if(addressCount==0) {
                     calcCenter();
@@ -54,7 +74,21 @@ function calcCenter() {
         totalLon = latLons[i].lng() + totalLon;
     }
     var midpoint = new google.maps.LatLng( (totalLat/latLons.length), (totalLon/latLons.length));
+
+    //Set map center
     map.setCenter(midpoint);
+
+    var circle = new google.maps.Circle({
+        map: map,
+        center: midpoint,
+        fillColor: "#00FF00",
+        fillOpacity: 0.4,
+        strokeColor: "#00FF00",
+
+        strokeOpacity: 1.0,
+        strokeWeight: 3,
+        radius: (1000)
+    });
 }
 
 function initMap() {
@@ -99,8 +133,6 @@ function callback(results, status) {
         createMarkers(results);
       }
 }
-
-function 
 
 function createMarkers(places) {
       var bounds = new google.maps.LatLngBounds();
