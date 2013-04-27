@@ -128,11 +128,6 @@ function locationSearchCallback(results, status, pagination) {
         return;
       } else {
         createMarkers(results);
-
-        if(pagination.hasNextPage) {
-            sleep:2;
-            pagination.nextPage();
-        }
       }
 }
 
