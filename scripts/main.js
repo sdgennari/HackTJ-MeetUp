@@ -23,8 +23,8 @@ var bounds = new google.maps.LatLngBounds();
 
 function initialize() {
     var mapCanvas = $( "#map_canvas" );
-	mapCanvas.width(mapCanvas.width()-250);
-	mapCanvas.height(mapCanvas.height()-60);
+	//mapCanvas.width(mapCanvas.width()-250);
+	//mapCanvas.height(mapCanvas.height()-60);
     
     //Make the geocoder
     geocoder = new google.maps.Geocoder();
@@ -35,11 +35,33 @@ function initialize() {
     //Make the map
     initMap();
 
+    //Make the UI
+    initUI();
+    
     //Sample Addresses
     //getLatLonFromAddresses();
 
     //Sample Directions
     //calcDirections();
+}
+
+function initUI() {
+    $("#left-hide").click(function() {
+        $("#left-bar").hide("slide", 500);
+    });
+
+    $("#left-show").click(function() {
+        $("#left-bar").show("slide", 500);
+    });
+
+    $("#right-hide").click(function() {
+        $("#right-bar").hide("slide", {direction:"right"}, 500);
+    });
+
+    $("#right-show").click(function() {
+        $("#right-bar").show("slide", {direction:"right"}, 500);
+    });
+
 }
 
 //Clear the current markers on the map
