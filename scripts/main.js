@@ -1,13 +1,15 @@
 var map;
 var geocoder;
-var latLons;
+var latLons = new Array();
 var destination;        //Stored as a string with the address OR a latLon
 var startAddress;
-var addresses;
+var addresses = new Array();
 var addressCount;
 var directionsDisplay;
 var directionsService = new google.maps.DirectionsService();
 var infowindow = new google.maps.InfoWindow();
+var searchMarkerArray = new Array();        //needed to remove markers from map
+var addressMarkerArray = new Array();        //needed to remove markers from map
 
 function initialize() {
     var mapCanvas = $( "#map_canvas" );
@@ -24,12 +26,30 @@ function initialize() {
     initMap();
 
     //Sample Addresses
-    getLatLonFromAddresses();
+    addresses.push("2000 Hayes Street, San Francisco, CA");
+    addresses.push("958 Filbert Street, San Francisco, CA");
+    addresses.push("1511 3rd St, San Francisco, CA");
+    //getLatLonFromAddresses();
 
     //Sample Directions
-    calcDirections();
+    //calcDirections();
 }
 
+//Clear the current markers on the map
+function clearAddressMarkers() {
+    while(addressMarkerArray.length>0) {
+        var marker = addressMarkerArray.pop();
+        marker.setMap(null);
+    }
+}
+
+//Clear the current markers on the map
+function clearSearchMarkers() {
+    while(searchMarkerArray.length>0) {
+        var marker = searchMarkerArray.pop();
+        marker.setMap(null);
+    }
+}
 
 //Note: we control the keyword, so no checks necessary
 function locationSearch(latLon, type, radius, keyword) {
@@ -63,6 +83,7 @@ function addMarker(latLon, address, tooltip) {
           title: addressTitle,
           position: latLon
     });
+    addressMarkerArray.push(marker);
 
     google.maps.event.addListener(marker, 'click', function(){
         startAddress = marker.getPosition();
@@ -94,13 +115,19 @@ function getLatLonFromAddresses() {
     //Get addresses from UI
     addresses = new Array();
     latLons = new Array();
+
+    /*Sample data
+    2000 Hayes Street, San Francisco, CA
+    958 Filbert Street, San Francisco, CA
+    1511 3rd St, San Francisco, CA
+    132 Starview Way, San Francisco, CA
+    */
     
-    //Sample data
-    addresses.push("2000 Hayes Street, San Francisco, CA");
-    addresses.push("958 Filbert Street, San Francisco, CA");
-    addresses.push("1511 3rd St, San Francisco, CA");
-    addresses.push("132 Starview Way, San Francisco, CA");
-    
+    //Get data from input fields
+    var addressFields = $.find(".address-field");
+    for(var i=0; i<addressFields.length; i++) {
+        addresses.push( $( addressFields[i] ).text());
+    }
 
     var request;
     addressCount=addresses.length;
@@ -122,6 +149,7 @@ function getLatLonFromAddresses() {
 }
 
 function calcCenter() {
+    clearSearchMarkers();
     var totalLat = 0;
     var totalLon = 0;
     
@@ -145,13 +173,14 @@ function calcCenter() {
         strokeWeight: 1,
         radius: (1600)
     });
+    searchMarkerArray.push(circle);
 
     //-----
     locationSearch(midpoint, "restaurant", 1200, "cafe");
 }
 
 function initMap() {
-    var latLon = new google.maps.LatLng(0.0, 0.0);
+    var latLon = new google.maps.LatLng(38.8900, -77.0300);
     var mapOptions = {
       center: latLon,
       zoom: 15,
@@ -194,8 +223,8 @@ function createMarkers(places, tooltip) {
           title: place.name,
           position: place.geometry.location
         });
+        searchMarkerArray.push(marker);
 
-        
         if(tooltip) {
             var content = "<div>"+
                     "<span>"+place.name+"</span><br>"+
@@ -221,17 +250,38 @@ function createMarkers(places, tooltip) {
 
 function setDestFromPopup() {
     destination = $( "#popup-address" ).text();
+    infowindow.close();
     calcDirections();
 }
 
 function addAddress() {
     var address = $( "#address" ).val();
-    var li = $( "<li class=\""+address+"\">"+address+"<input class=\"delete\" type=\"button\" onClick=\"removeAddress()\"></li>" );
+    if(address=="") {
+        return;
+    }
+    
+    var deleteButton = $( "<input class=\"delete\" type=\"button\">" );
+    deleteButton.click(function() {
+        var idx = -1;
+        var li = $(this).parent();
+        var children = li.parent().children();
+        for(var i=0; i< li.parent.length; i++) {
+            if( $(children[i]).text() == li.text()) {
+                idx=i;
+                break;
+            }
+        }
+        addresses.splice(idx-1,1);
+        li.remove();
+    });
+    
+    var li = $( "<li class=\"address-field\">"+address+"</li>" );
+    li.append(deleteButton);
     $( "#addresses" ).append(li);
 	$( "#address" ).val("");
-
 }
 
+/*
 function removeAddress() {
     //Temporary safe measure against removing all addresses
     if(addresses.length <= 1) {
@@ -251,4 +301,4 @@ function removeAddress() {
     }
     //Remove the address from the array
     addresses.splice(i,1);
-}
+}*/
