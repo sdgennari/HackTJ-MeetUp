@@ -13,6 +13,12 @@ h1 {
     line-height:50px;
 }
 
+#addresses li {
+    height:30px;
+    line-height:30px;
+    margin-top:5px;
+}
+
 input {
     background-color: #F7F2CB;
     border: medium none;
