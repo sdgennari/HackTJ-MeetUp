@@ -11,6 +11,16 @@ var infowindow = new google.maps.InfoWindow();
 var searchMarkerArray = new Array();        //needed to remove markers from map
 var addressMarkerArray = new Array();        //needed to remove markers from map
 
+var bounds = new google.maps.LatLngBounds();
+
+
+/*Sample data
+2000 Hayes Street, San Francisco, CA
+958 Filbert Street, San Francisco, CA
+1511 3rd St, San Francisco, CA
+132 Starview Way, San Francisco, CA
+*/
+
 function initialize() {
     var mapCanvas = $( "#map_canvas" );
 	mapCanvas.width(mapCanvas.width()-250);
@@ -26,9 +36,6 @@ function initialize() {
     initMap();
 
     //Sample Addresses
-    addresses.push("2000 Hayes Street, San Francisco, CA");
-    addresses.push("958 Filbert Street, San Francisco, CA");
-    addresses.push("1511 3rd St, San Francisco, CA");
     //getLatLonFromAddresses();
 
     //Sample Directions
@@ -115,13 +122,6 @@ function getLatLonFromAddresses() {
     //Get addresses from UI
     addresses = new Array();
     latLons = new Array();
-
-    /*Sample data
-    2000 Hayes Street, San Francisco, CA
-    958 Filbert Street, San Francisco, CA
-    1511 3rd St, San Francisco, CA
-    132 Starview Way, San Francisco, CA
-    */
     
     //Get data from input fields
     var addressFields = $.find(".address-field");
@@ -138,6 +138,7 @@ function getLatLonFromAddresses() {
             if (status == google.maps.GeocoderStatus.OK) {
                 //Get the latLon from the results
                 latLons.push( results[0].geometry.location );
+                bounds.extend( results[0].geometry.location );
                 addMarker( results[0].geometry.location, results[0].formatted_address, true );
                 addressCount--;
                 if(addressCount==0) {
@@ -160,7 +161,8 @@ function calcCenter() {
     var midpoint = new google.maps.LatLng( (totalLat/latLons.length), (totalLon/latLons.length));
 
     //Set map center and draw circles
-    map.setCenter(midpoint);
+    //map.setCenter(midpoint);
+    map.fitBounds(bounds);
 
     var circle = new google.maps.Circle({
         map: map,
