@@ -16,6 +16,22 @@ function initialize() {
 }
 
 
+//Note: we control the keyword, so no checks necessary
+function locationSearch(latLon, type, radius, keyword) {
+    var typeArr = new Array();
+    typeArr.push(type);
+    
+    var request = {
+        location: latLon,
+        radius: radius,
+        keyword: keyword,
+        types: typeArr
+    };
+      
+    var service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, locationSearchCallback);
+}
+
 function addMarker(latLon, address) {
     var image = new google.maps.MarkerImage(
         'http://i.imgur.com/3YJ8z.png',
@@ -86,10 +102,12 @@ function calcCenter() {
 
         strokeOpacity: 0.0,
         strokeWeight: 1,
-        radius: (1000)
+        radius: (1600)
     });
-}
 
+    //-----
+    locationSearch(midpoint, "store", 1200, "chinese");
+}
 
 function initMap() {
     //var latLon = new google.maps.LatLng(37.7750, -122.4183);
@@ -102,20 +120,9 @@ function initMap() {
     map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
     getLatLonFromAddresses();
-    /*
-    var request = {
-        location: latLon,
-        radius: 800,
-        keyword: "bagel",
-        types: ['food']
-    };
-      
-    var service = new google.maps.places.PlacesService(map);
-    service.nearbySearch(request, callback);
-    */
 }
 
-function callback(results, status) {
+function locationSearchCallback(results, status) {
       if (status != google.maps.places.PlacesServiceStatus.OK) {
         return;
       } else {
@@ -124,9 +131,11 @@ function callback(results, status) {
 }
 
 function createMarkers(places) {
-      var bounds = new google.maps.LatLngBounds();
+      //var bounds = new google.maps.LatLngBounds();
 
       for (var i = 0, place; place = places[i]; i++) {
+        
+      
         var image = {
           url: place.icon,
           size: new google.maps.Size(71, 71),
@@ -142,7 +151,7 @@ function createMarkers(places) {
           position: place.geometry.location
         });
         
-        bounds.extend(place.geometry.location);
+        //bounds.extend(place.geometry.location);
       }
-      map.fitBounds(bounds);
+      //map.fitBounds(bounds);
 }
