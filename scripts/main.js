@@ -12,6 +12,8 @@ var searchMarkerArray = new Array();        //needed to remove markers from map
 var addressMarkerArray = new Array();        //needed to remove markers from map
 
 var bounds = new google.maps.LatLngBounds();
+var searchDetails ={ latLon: "", types: "", radius: "", keyword: "" };
+var placeList = new Array();
 
 
 /*Sample data
@@ -37,7 +39,7 @@ function initialize() {
 
     //Make the UI
     initUI();
-    
+
     //Sample Addresses
     //getLatLonFromAddresses();
 
@@ -62,6 +64,8 @@ function initUI() {
         $("#right-bar").show("slide", {direction:"right"}, 500);
     });
 
+    initTypeAutoComplete()
+
 }
 
 //Clear the current markers on the map
@@ -81,16 +85,43 @@ function clearSearchMarkers() {
 }
 
 //Note: we control the keyword, so no checks necessary
-function locationSearch(latLon, type, radius, keyword) {
+function locationSearch() {
+    clearSearchMarkers();
     var typeArr = new Array();
-    typeArr.push(type);
+
+    if(searchDetails.types == "") {
+        typeArr = placeList;
+    }
+    else {
+        typeArr.push(searchDetails.types);
+    }
+
+    if(searchDetails.latLon == "") {
+        return;
+    }
+    if(searchDetails.radius == "") {
+        searchDetails.radius = 1600;
+    }
     
     var request = {
-        location: latLon,
-        radius: radius,
-        keyword: keyword,
+        location: searchDetails.latLon,
+        radius: (searchDetails.radius-400),
+        keyword: searchDetails.keyword,
         types: typeArr
     };
+
+    var circle = new google.maps.Circle({
+        map: map,
+        center: searchDetails.latLon,
+        fillColor: "#72CCA7",
+        fillOpacity: 0.5,
+        strokeColor: "#72CCA7",
+
+        strokeOpacity: 0.0,
+        strokeWeight: 1,
+        radius: (searchDetails.radius+400)
+    });
+    searchMarkerArray.push(circle);
       
     var service = new google.maps.places.PlacesService(map);
     service.nearbySearch(request, locationSearchCallback);
@@ -172,7 +203,6 @@ function getLatLonFromAddresses() {
 }
 
 function calcCenter() {
-    clearSearchMarkers();
     var totalLat = 0;
     var totalLon = 0;
     
@@ -182,27 +212,17 @@ function calcCenter() {
     }
     var midpoint = new google.maps.LatLng( (totalLat/latLons.length), (totalLon/latLons.length));
 
-    //Set map center and draw circles
+    //Set map center
     //map.setCenter(midpoint);
     map.fitBounds(bounds);
     $("#left-bar").hide("slide", 500);
     $("#right-bar").hide("slide", {direction:"right"}, 500);
-
-    var circle = new google.maps.Circle({
-        map: map,
-        center: midpoint,
-        fillColor: "#00FF00",
-        fillOpacity: 0.3,
-        strokeColor: "#00FF00",
-
-        strokeOpacity: 0.0,
-        strokeWeight: 1,
-        radius: (1600)
-    });
-    searchMarkerArray.push(circle);
-
-    //-----
-    locationSearch(midpoint, "restaurant", 1200, "cafe");
+    
+    searchDetails.latLon = midpoint;
+    //searchDetails.types = "restaurant";
+    //searchDetails.radius = 1200;
+    //searchDetails.keyword = "";
+    locationSearch();
 }
 
 function initMap() {
@@ -332,10 +352,18 @@ function removeAddress() {
 
 
 function setRadius() {
-
+    var rad = parseFloat($("#radius").val());
+    if(rad == NaN) {
+        return;
+    }
+    searchDetails.radius = rad*1600;
+    locationSearch();
 }
 
 function setVenue() {
+    var type = $("#venue").val();
+    searchDetails.types = type;
+    locationSearch();
 
 }
 
@@ -344,3 +372,57 @@ function tweet(name, vicinity) {
 	top = (screen.height/2)-150;
 	window.open("https://twitter.com/share?text="+encodeURIComponent("#meetUp at "+name+"! Address: "+vicinity+" #hackTJ"), '', 'height=300' + ', width=580' + ', top=' + top +', left=' + left + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0');
 }
+
+function initTypeAutoComplete() {
+    placeList = [
+        "amusement_park",
+        "aquarium",
+        "art_gallery",
+        "bakery",
+        "bar",
+        "bowling_alley",
+        "bus_station",
+        "cafe",
+        "campground",
+        "casino",
+        "clothing_store",
+        "convenience_store",
+        "department_store",
+        "electronics_store",
+        //"establishment",
+        "food",
+        "furniture_store",
+        "grocery_or_supermarket",
+        "home_goods_store",
+        "jewelry_store",
+        "library",
+        "lodging",
+        "meal_delivery",
+        "meal_takeaway",
+        "movie_rental",
+        "movie_theater",
+        "museum",
+        "night_club",
+        "park",
+        "restaurant",
+        "school",
+        "shoe_store",
+        "shopping_mall",
+        "spa",
+        "stadium",
+        "store",
+        "subway_station",
+        "taxi_stand",
+        "train_station",
+        "university",
+        "zoo"];
+
+        $("#venue").autocomplete({
+            source: placeList,
+            messages: {
+                noResults: '',
+                results: function() {}
+            }
+        });
+}
+
